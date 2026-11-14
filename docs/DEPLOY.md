@@ -7,9 +7,11 @@ What happens on every deploy (configured in `railway.json`):
 
 1. **Build:** installs everything (including build tools, even with `NODE_ENV=production`), then
    `npm run build` builds the website and the API.
-2. **Release:** `npm run release` applies database migrations, and on a brand-new album adds
-   the starter people and categories. It never re-adds anything an admin has deleted.
-3. **Start:** `npm start`. Railway waits for `/api/health` before sending visitors over.
+2. **Start:** `npm start`. Before accepting visitors, the server applies any new database
+   changes and, on a brand-new album, adds the starter people and categories. This is safe on
+   every start and never re-adds anything an admin has deleted. Railway waits for
+   `/api/health` before sending visitors over. If the database step fails, the server stops,
+   so a broken update never goes live.
 
 ---
 
@@ -24,7 +26,11 @@ switched off.
 ## 2. Create the Railway project
 
 1. Sign in at railway.com → **New Project** → **Deploy from GitHub repo** → pick the repository.
-2. In the same project: **+ Create** → **Database** → **PostgreSQL**.
+2. Railway may spot the two parts of the project and create **two** services (`web` and `api`).
+   You need just one: delete the `web` service, then in the remaining service's **Settings**
+   clear **Root Directory**, **Custom Build/Start Command** and **Watch Paths**, and set the
+   **Railway Config File** to `/railway.json`.
+3. In the same project: **+ Create** → **Database** → **PostgreSQL**.
 
 ## 3. Set the variables
 
@@ -86,9 +92,13 @@ railway link          # pick the project and the app service
 railway ssh           # opens a shell on the running server
 ```
 
-Then, in that shell:
+The first `railway ssh` needs an SSH key: run `ssh-keygen -t ed25519` (press Enter for the
+default file; a passphrase is recommended), then `railway ssh` again and let it register the key.
+
+Then, in that shell (the first line makes Node available in the server shell):
 
 ```bash
+export PATH="/mise/shims:$PATH"
 npm run codes:prod --workspace apps/api -- add-admin "Your name"
 npm run codes:prod --workspace apps/api -- set-view
 npm run codes:prod --workspace apps/api -- set-download

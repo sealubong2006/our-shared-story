@@ -4,7 +4,7 @@ import type { EventDto, PersonDto, PhotoDto, PhotoPage, TimelineSummary } from "
 import { addAdmin, setSharedCode } from "../src/services/codes.js";
 import { MemoryStore } from "./memory-store.js";
 import { setupTestApp } from "./helpers.js";
-import { seed } from "../src/db/seed.js";
+import { seed } from "../src/db/setup.js";
 
 const store = new MemoryStore();
 const t = setupTestApp(store);

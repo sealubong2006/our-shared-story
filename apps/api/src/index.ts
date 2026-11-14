@@ -1,5 +1,6 @@
 import { loadConfig } from "./config.js";
 import { createDb } from "./db/client.js";
+import { prepareDatabase } from "./db/setup.js";
 import { createStorage } from "./lib/storage.js";
 import { createApp } from "./app.js";
 import { purgeExpiredSessions } from "./auth/sessions.js";
@@ -9,6 +10,11 @@ const config = loadConfig();
 const { db, pool } = createDb(config.DATABASE_URL);
 const storage = createStorage(config);
 if (!storage) console.warn("Cloudflare R2 is not configured — photo storage is unavailable.");
+
+// Apply any new database changes (and fill in a brand-new album) before accepting visitors.
+// Safe on every start; if it fails the server exits, so a broken deploy never goes live.
+await prepareDatabase(db);
+console.log("Database is up to date.");
 
 const app = createApp({ db, config, storage });
 const server = app.listen(config.PORT, () => {

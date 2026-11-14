@@ -4,7 +4,7 @@ import { CSRF_HEADER, CSRF_HEADER_VALUE } from "@family-album/shared";
 import { createApp } from "../src/app.js";
 import { loadConfig } from "../src/config.js";
 import { createDb } from "../src/db/client.js";
-import { seed } from "../src/db/seed.js";
+import { seed } from "../src/db/setup.js";
 import type { ObjectStore } from "../src/lib/storage.js";
 
 export function setupTestApp(storage: ObjectStore | null = null) {

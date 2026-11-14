@@ -4,7 +4,6 @@
     "buildCommand": "npm install --include=dev --no-audit --no-fund && npm run build"
   },
   "deploy": {
-    "preDeployCommand": ["npm run release"],
     "startCommand": "npm start",
     "healthcheckPath": "/api/health",
     "healthcheckTimeout": 60,

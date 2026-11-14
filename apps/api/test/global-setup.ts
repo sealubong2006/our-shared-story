@@ -1,6 +1,6 @@
 import pg from "pg";
 import { applyTestEnv } from "./env.js";
-import { runMigrations } from "../src/db/migrate.js";
+import { runMigrations } from "../src/db/setup.js";
 
 /** Wipes the test database and applies all migrations once per test run. */
 export default async function setup() {
