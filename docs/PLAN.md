@@ -1,8 +1,8 @@
 # Our Shared Story — Architecture & Implementation Plan
 
 Status: **All six phases built; deployment prepared** — 2026-11-14. See docs/DEPLOY.md.
-Deployment prep: `railway.json` (build → release [migrate + first-time seed] → start, health
-check); production defaults for secure cookies and one trusted proxy (blank variables count as
+Deployment prep: `.railway/railway.ts` (Railway IaC, variables unmanaged: build → start, health
+check; the server migrates and seeds itself on start); production defaults for secure cookies and one trusted proxy (blank variables count as
 unset); server refuses to start without R2 in production; CLI tools built into dist
 (`codes:prod`, `r2:check:prod`); seeding only adds people/categories to an empty album.
 Rehearsed locally on a fresh database in production mode.

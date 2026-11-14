@@ -3,7 +3,8 @@
 One Railway service runs everything: the API and the built website, on the same address.
 A Railway PostgreSQL database holds the album's records; photos live in Cloudflare R2.
 
-What happens on every deploy (configured in `railway.json`):
+What happens on every deploy (configured in `.railway/railway.ts`, Railway's "Infrastructure as
+Code" file. Variables are deliberately **not** in it; they stay private in Railway):
 
 1. **Build:** installs everything (including build tools, even with `NODE_ENV=production`), then
    `npm run build` builds the website and the API.
@@ -28,8 +29,8 @@ switched off.
 1. Sign in at railway.com → **New Project** → **Deploy from GitHub repo** → pick the repository.
 2. Railway may spot the two parts of the project and create **two** services (`web` and `api`).
    You need just one: delete the `web` service, then in the remaining service's **Settings**
-   clear **Root Directory**, **Custom Build/Start Command** and **Watch Paths**, and set the
-   **Railway Config File** to `/railway.json`.
+   clear **Root Directory** and **Watch Paths**. The build and start settings come from
+   `.railway/railway.ts` (step 8).
 3. In the same project: **+ Create** → **Database** → **PostgreSQL**.
 
 ## 3. Set the variables
@@ -115,6 +116,22 @@ signing devices out) can be done in the app under **Admin → Settings**.
 - Sign in at `/admin` with your admin code and upload one photo, ideally an iPhone (HEIC) photo,
   to confirm conversion works on the server.
 - Download that photo with the download code.
+
+## 8. Changing deploy settings (.railway/railway.ts)
+
+Build command, start command and health check live in `.railway/railway.ts`. After editing it,
+preview and apply from the project folder (Railway CLI, linked to the project):
+
+```bash
+railway config plan     # shows what would change; touches nothing
+railway config apply    # applies it
+```
+
+The file must keep `variables: { managed: false }`, so it never reads or writes the secrets.
+On Windows, if `railway config` wrongly says the CLI is too old, point it at the real program
+first (PowerShell): `$env:_ = "$env:APPDATA
+pm
+ode_modules@railwaycliinailway.exe"`.
 
 ## Notes
 
