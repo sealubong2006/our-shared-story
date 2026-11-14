@@ -1,0 +1,27 @@
+{
+  "name": "family-album",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev --workspace apps/api",
+    "dev:web": "npm run dev --workspace apps/web",
+    "build": "npm run build --workspace apps/web && npm run build --workspace apps/api",
+    "start": "npm run start --workspace apps/api",
+    "test": "npm run test --workspace apps/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:generate": "npm run db:generate --workspace apps/api",
+    "db:migrate": "npm run db:migrate --workspace apps/api",
+    "db:seed": "npm run db:seed --workspace apps/api",
+    "codes": "npm run codes --workspace apps/api --",
+    "r2:check": "npm run r2:check --workspace apps/api",
+    "release": "npm run release --workspace apps/api"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,71 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource/caveat/500.css";
+@import "@fontsource/caveat/700.css";
+@import "@fontsource/great-vibes/400.css";
+
+/*
+ * Design tokens, from the two reference screenshots:
+ *  - light "bookshelf": warm off-white paper, soft tinted cards, handwritten titles
+ *  - dark "stage": navy gradient behind the photo book and the viewer
+ */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-hand: "Caveat", "Segoe Print", cursive;
+  /* The album's name only — a romantic script that needs to be shown large. */
+  --font-script: "Great Vibes", "Segoe Script", cursive;
+
+  --color-paper: #f4f2ee;
+  --color-frame: #e4e1db;
+  --color-card: #ebe8e3;
+  --color-card-hover: #e5e1db;
+  --color-ink: #24252b;
+  /* Darkened for WCAG AA (4.5:1) on paper and card backgrounds. */
+  --color-muted: #676664;
+  --color-line: #dcd8d1;
+  --color-accent: #c98a5b;
+  --color-accent-strong: #a96d42;
+  --color-danger: #b4483b;
+
+  --color-stage-from: #1c2230;
+  --color-stage-to: #3b4458;
+  --color-page: #fbfaf7;
+
+  --radius-card: 1rem;
+  --shadow-photo: 0 1px 2px rgb(36 37 43 / 0.08), 0 6px 18px rgb(36 37 43 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(36 37 43 / 0.06), 0 18px 40px rgb(36 37 43 / 0.14);
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    min-height: 100dvh;
+    background: var(--color-paper);
+    font-family: var(--font-sans);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent-strong);
+    outline-offset: 2px;
+  }
+}
+
+/* Global "animations off" setting also stops CSS transitions. */
+html[data-animations="off"] *,
+html[data-animations="off"] *::before,
+html[data-animations="off"] *::after {
+  transition-duration: 0s !important;
+  animation-duration: 0s !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+}
