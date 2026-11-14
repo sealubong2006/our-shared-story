@@ -5,7 +5,8 @@ A Railway PostgreSQL database holds the album's records; photos live in Cloudfla
 
 What happens on every deploy (configured in `railway.json`):
 
-1. **Build:** `npm run build` builds the website and the API.
+1. **Build:** installs everything (including build tools, even with `NODE_ENV=production`), then
+   `npm run build` builds the website and the API.
 2. **Release:** `npm run release` applies database migrations, and on a brand-new album adds
    the starter people and categories. It never re-adds anything an admin has deleted.
 3. **Start:** `npm start`. Railway waits for `/api/health` before sending visitors over.
