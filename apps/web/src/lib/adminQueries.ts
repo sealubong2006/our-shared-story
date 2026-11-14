@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   ActivityDto,
+  BackupDto,
   CreateShareLink,
   CreatedShareLink,
   DownloadLogDto,
@@ -76,6 +77,9 @@ export const useRevokeSessions = () =>
 
 export const useDownloadLog = () =>
   useQuery({ queryKey: ["admin", "downloads"], queryFn: () => api<DownloadLogDto[]>("/admin/downloads") });
+
+export const useBackups = () =>
+  useQuery({ queryKey: ["admin", "backups"], queryFn: () => api<BackupDto[]>("/admin/backups") });
 
 export const useActivity = () =>
   useQuery({ queryKey: ["admin", "activity"], queryFn: () => api<ActivityDto[]>("/admin/activity") });

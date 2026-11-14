@@ -5,6 +5,7 @@ import { createStorage } from "./lib/storage.js";
 import { createApp } from "./app.js";
 import { purgeExpiredSessions } from "./auth/sessions.js";
 import { purgeDeletedPhotos } from "./services/purge.js";
+import { backupIfDue } from "./services/backup.js";
 
 const config = loadConfig();
 const { db, pool } = createDb(config.DATABASE_URL);
@@ -31,6 +32,15 @@ async function housekeeping() {
     }
   } catch (err) {
     console.error("Housekeeping failed", err);
+  }
+  // Separate from the clean-up above, so one failing never stops the other.
+  if (storage) {
+    try {
+      const made = await backupIfDue(db, storage);
+      if (made) console.log(`Database backup saved: ${made.key} (${Math.round(made.size / 1024)} KB).`);
+    } catch (err) {
+      console.error("Database backup failed", err);
+    }
   }
 }
 const startup = setTimeout(housekeeping, 60_000);

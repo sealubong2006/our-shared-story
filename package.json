@@ -18,7 +18,8 @@
     "db:seed": "npm run db:seed --workspace apps/api",
     "codes": "npm run codes --workspace apps/api --",
     "r2:check": "npm run r2:check --workspace apps/api",
-    "release": "npm run release --workspace apps/api"
+    "release": "npm run release --workspace apps/api",
+    "backup": "npm run backup --workspace apps/api --"
   },
   "engines": {
     "node": ">=22"

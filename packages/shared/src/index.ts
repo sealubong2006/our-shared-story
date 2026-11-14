@@ -338,3 +338,12 @@ export type CreateCollection = z.input<typeof createCollectionSchema>;
 export type UpdateCollection = z.input<typeof updateCollectionSchema>;
 export type CreateEvent = z.input<typeof createEventSchema>;
 export type UpdateEvent = z.input<typeof updateEventSchema>;
+
+// ---------------------------------------------------------------- Backups
+
+/** A stored database backup (photos aren't included; they live in R2 already). */
+export interface BackupDto {
+  key: string;
+  size: number;
+  createdAt: string;
+}

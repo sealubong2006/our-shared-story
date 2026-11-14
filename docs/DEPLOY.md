@@ -133,10 +133,35 @@ first (PowerShell): `$env:_ = "$env:APPDATA
 pm
 ode_modules@railwaycliinailway.exe"`.
 
+## 9. Backups and restoring
+
+Railway's own database backups need its Pro plan, so the album makes its own. Once a day the
+server saves a compressed copy of the database (everything except sign-in sessions) to R2 under
+`backups/`, keeping the newest 30. Photos aren't in these copies; they live in R2 already.
+
+- **See them:** Admin → Settings → Backups.
+- **Keep one off-site:** **Download a copy** there now and then (e.g. monthly) and store it away
+  from Cloudflare, e.g. on your computer or a cloud drive.
+- **On the server** (`railway ssh`, then `export PATH="/mise/shims:$PATH"`):
+
+  ```bash
+  npm run backup:prod --workspace apps/api -- list
+  npm run backup:prod --workspace apps/api -- create
+  ```
+
+**Restoring** replaces *everything* in the database with the backup, in one go (if anything
+fails, nothing changes). It first saves a safety backup of the current database, and everyone
+has to enter their code again afterwards:
+
+```bash
+npm run backup:prod --workspace apps/api -- restore backups/2026-11-14T03-00-00.000Z.json.gz --yes-replace-everything
+```
+
+A backup can only be restored into the same database version it was made with. After an app
+update that changes the database, older backups are refused with a clear message.
+
 ## Notes
 
-- **Backups:** Railway's PostgreSQL has a Backups tab. Turn on scheduled backups. Photos are in R2,
-  separately from the database.
 - **One server:** ZIP download links are held in memory, so keep the service at one replica.
 - **Clean-up** of deleted photos (after 30 days) and expired sessions runs inside the server
   every 6 hours. No cron job is needed.

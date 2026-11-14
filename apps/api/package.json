@@ -17,7 +17,9 @@
     "r2:check": "tsx --env-file=../../.env scripts/r2-check.ts",
     "release": "node dist/db/migrate.js && node dist/db/seed.js",
     "codes:prod": "node dist/codes.js",
-    "r2:check:prod": "node dist/r2-check.js"
+    "r2:check:prod": "node dist/r2-check.js",
+    "backup": "tsx --env-file=../../.env scripts/backup.ts",
+    "backup:prod": "node dist/backup.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1169.0",

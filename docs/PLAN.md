@@ -6,6 +6,9 @@ check; the server migrates and seeds itself on start); production defaults for s
 unset); server refuses to start without R2 in production; CLI tools built into dist
 (`codes:prod`, `r2:check:prod`); seeding only adds people/categories to an empty album.
 Rehearsed locally on a fresh database in production mode.
+Backups: Railway's backups need Pro, so the server writes a daily gzipped JSON copy of every table
+(except sessions/failed attempts) to R2 `backups/`, keeps 30; admins can download one; CLI restore
+is transactional, refuses a different schema version, and takes a safety backup first.
 Phase 6 delivered: admin screens, the share page and the photo editor load on demand; zod kept
 out of the browser bundle (plain constants live in `@family-album/shared/constants`); initial JS
 ~180 KB gzipped (was ~215 KB). Production server gzips responses, caches hashed `/assets` for a

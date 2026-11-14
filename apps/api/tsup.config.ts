@@ -9,6 +9,7 @@ export default defineConfig({
     // Command-line tools, so they can be run on the server too (see docs/DEPLOY.md).
     codes: "scripts/codes.ts",
     "r2-check": "scripts/r2-check.ts",
+    backup: "scripts/backup.ts",
   },
   format: ["esm"],
   platform: "node",

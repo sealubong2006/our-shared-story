@@ -30,6 +30,8 @@ import {
 } from "../services/collections.js";
 import { createShareLink, listShareLinks, revokeShareLink } from "../services/sharing.js";
 import { recentDownloads } from "../services/downloads.js";
+import { logActivity } from "../services/activity.js";
+import { backupDownloadName, exportDatabase, listBackups } from "../services/backup.js";
 import {
   changeAdminActive,
   createAdmin,
@@ -160,6 +162,22 @@ export function adminRouter(db: Db, storage: ObjectStore | null): Router {
   });
   router.get("/activity", async (_req, res) => {
     res.json(await recentActivity(db));
+  });
+
+  // ---- database backups
+  router.get("/backups", async (_req, res) => {
+    res.json(storage ? await listBackups(storage) : []);
+  });
+  /** A fresh copy of the database for an admin to keep on their own computer. */
+  router.get("/backups/download", async (req, res) => {
+    const data = await exportDatabase(db);
+    await logActivity(db, adminId(req), "backup.download", undefined, { size: data.length });
+    res.set({
+      "Content-Type": "application/gzip",
+      "Content-Disposition": `attachment; filename="${backupDownloadName()}"`,
+      "Cache-Control": "no-store",
+    });
+    res.send(data);
   });
 
   return router;

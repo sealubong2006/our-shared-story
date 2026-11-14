@@ -28,6 +28,9 @@ export class MemoryStore implements ObjectStore {
   async deleteObject(key: string) {
     this.objects.delete(key);
   }
+  async list(prefix: string) {
+    return this.keys(prefix).map((key) => ({ key, size: this.objects.get(key)!.body.length }));
+  }
   async check() {}
 
   keys(prefix = "") {

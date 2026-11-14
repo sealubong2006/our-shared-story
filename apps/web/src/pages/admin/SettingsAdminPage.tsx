@@ -3,6 +3,7 @@ import type { ActivityDto } from "@family-album/shared";
 import { ApiError } from "../../lib/api";
 import {
   useActivity,
+  useBackups,
   useAddAdmin,
   useDownloadLog,
   useResetAdminCode,
@@ -162,6 +163,7 @@ const ACTION_LABELS: Record<string, string> = {
   "admin.enable": "re-enabled an admin",
   "admin.disable": "disabled an admin",
   "sessions.revoke": "signed out family devices",
+  "backup.download": "downloaded a copy of the database",
 };
 
 function describe(a: ActivityDto) {
@@ -176,6 +178,7 @@ export function SettingsAdminPage() {
   const settings = useSettings();
   const downloads = useDownloadLog();
   const activity = useActivity();
+  const backups = useBackups();
   const rotate = useRotateCode();
   const addAdmin = useAddAdmin();
   const resetAdmin = useResetAdminCode();
@@ -344,6 +347,38 @@ export function SettingsAdminPage() {
           )}
         </div>
         {notice && <p className="mt-3 text-sm text-[#3f6b37]">{notice}</p>}
+      </Section>
+
+      <Section
+        title="Backups"
+        intro="Every night the album saves a copy of its records (people, tags, captions, events, codes and settings) and keeps the last 30. The photos themselves are stored separately and aren't part of these copies. Now and then, download a copy to keep somewhere safe, away from the album."
+        action={
+          <a
+            href="/api/admin/backups/download"
+            download
+            className="inline-flex items-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper transition hover:bg-black"
+          >
+            Download a copy
+          </a>
+        }
+      >
+        {backups.data?.length ? (
+          <>
+            <p className="text-sm">
+              Latest: <strong className="font-medium">{when(backups.data[0]!.createdAt)}</strong> ·{" "}
+              {backups.data.length} kept
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+              {backups.data.slice(1, 6).map((b) => (
+                <li key={b.key}>{when(b.createdAt)}</li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <p className="text-sm text-muted">
+            {backups.isPending ? "Loading…" : "No backups yet. The first is made within a few minutes of the server starting."}
+          </p>
+        )}
       </Section>
 
       <div className="grid gap-6 lg:grid-cols-2">

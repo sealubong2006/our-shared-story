@@ -83,6 +83,12 @@ npm run codes -- enable-admin "Mum"
 npm run codes -- list-admins
 ```
 
+## Backups
+
+The server backs up the database to R2 once a day (newest 30 kept); admins can download a copy
+under Admin → Settings. `npm run backup -- list | create | save FILE | restore BACKUP --yes-replace-everything`
+works locally; see [docs/DEPLOY.md](docs/DEPLOY.md) for the live server.
+
 ## Deploying
 
 See [docs/DEPLOY.md](docs/DEPLOY.md) (Railway + Cloudflare R2). In production the server

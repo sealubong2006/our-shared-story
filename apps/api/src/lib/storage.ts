@@ -3,6 +3,7 @@ import {
   GetObjectCommand,
   HeadBucketCommand,
   HeadObjectCommand,
+  ListObjectsV2Command,
   NotFound,
   PutObjectCommand,
   S3Client,
@@ -32,6 +33,8 @@ export interface ObjectStore {
   /** Size in bytes, or null if the object does not exist. */
   headObject(key: string): Promise<number | null>;
   deleteObject(key: string): Promise<void>;
+  /** Every object whose key starts with `prefix` (used for the database backups). */
+  list(prefix: string): Promise<{ key: string; size: number }[]>;
   check(): Promise<void>;
 }
 
@@ -118,6 +121,19 @@ export class R2Store implements ObjectStore {
 
   async deleteObject(key: string): Promise<void> {
     await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: key }));
+  }
+
+  async list(prefix: string): Promise<{ key: string; size: number }[]> {
+    const found: { key: string; size: number }[] = [];
+    let token: string | undefined;
+    do {
+      const page = await this.client.send(
+        new ListObjectsV2Command({ Bucket: this.bucket, Prefix: prefix, ContinuationToken: token }),
+      );
+      for (const o of page.Contents ?? []) if (o.Key) found.push({ key: o.Key, size: o.Size ?? 0 });
+      token = page.IsTruncated ? page.NextContinuationToken : undefined;
+    } while (token);
+    return found;
   }
 
   async check(): Promise<void> {
